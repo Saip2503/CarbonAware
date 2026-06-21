@@ -10,7 +10,7 @@ class InsightsPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final insights = ref.watch(insightsProvider);
+    final insightsAsync = ref.watch(insightsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,18 +36,39 @@ class InsightsPanel extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
 
-                if (insights.isEmpty)
-                  Center(
+                insightsAsync.when(
+                  data: (insights) {
+                    if (insights.isEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40.0),
+                          child: Text(
+                            'No insights available yet. Try logging more days.',
+                            style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
+                          ),
+                        ),
+                      );
+                    }
+                    return Column(
+                      children: insights.map((insight) => _buildInsightCard(theme, insight)).toList(),
+                    );
+                  },
+                  loading: () => const Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      padding: EdgeInsets.all(40.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  error: (error, stackTrace) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(40.0),
                       child: Text(
-                        'No insights available yet. Try logging more days.',
-                        style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
+                        'Failed to load insights. $error',
+                        style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.error),
                       ),
                     ),
-                  )
-                else
-                  ...insights.map((insight) => _buildInsightCard(theme, insight)).toList(),
+                  ),
+                ),
                 const SizedBox(height: 40),
               ],
             ),

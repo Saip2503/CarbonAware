@@ -3,11 +3,10 @@ import '../../logging/providers/log_providers.dart';
 import '../data/insights_engine.dart';
 import '../models/insight.dart';
 
-final insightsProvider = Provider<List<Insight>>((ref) {
+final insightsProvider = FutureProvider<List<Insight>>((ref) async {
   final logsAsync = ref.watch(recentLogsStreamProvider);
-  return logsAsync.when(
-    data: (logs) => InsightsEngine.generateInsights(logs),
-    loading: () => [],
-    error: (_, __) => [],
-  );
+  if (logsAsync.value == null) {
+    return [];
+  }
+  return await InsightsEngine.generateInsights(logsAsync.value!);
 });

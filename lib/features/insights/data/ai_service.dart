@@ -21,7 +21,7 @@ class AiService {
           apiKey == 'YOUR_GEMINI_API_KEY_HERE' || 
           apiKey.startsWith('placeholder')) {
         debugPrint("AiService: Gemini API key not configured or is placeholder. Using rule-based fallback.");
-        return _generateFallbackInsight(logs);
+        return await _generateFallbackInsight(logs);
       }
 
       final model = GenerativeModel(
@@ -62,7 +62,7 @@ Do not include any other text, markdown formatting, or bullet points. Just the 5
       return _parseResponse(text, logs);
     } catch (e) {
       debugPrint("AiService Error: $e. Falling back to rule-based insight.");
-      return _generateFallbackInsight(logs);
+      return await _generateFallbackInsight(logs);
     }
   }
 
@@ -110,13 +110,13 @@ Do not include any other text, markdown formatting, or bullet points. Just the 5
       );
     } catch (e) {
       debugPrint("AiService: Failed to parse Gemini response: $e");
-      return _generateFallbackInsight(logs);
+      throw Exception("Parse failed"); // Caught by outer try-catch
     }
   }
 
-  static Insight _generateFallbackInsight(List<DailyLog> logs) {
+  static Future<Insight> _generateFallbackInsight(List<DailyLog> logs) async {
     // Generate insights using our rule-based engine and return the top one
-    final ruleBasedInsights = InsightsEngine.generateInsights(logs);
+    final ruleBasedInsights = await InsightsEngine.generateInsights(logs);
     if (ruleBasedInsights.isNotEmpty) {
       return ruleBasedInsights.first;
     }
