@@ -1,0 +1,40 @@
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "carbonaware-500117",
+          "appId": "1:1017440772168:android:4fd24dea78f0698adbb87d",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "carbonaware-500117",
+          "configurations": {
+            "android": "1:1017440772168:android:4fd24dea78f0698adbb87d",
+            "ios": "1:1017440772168:ios:fd8acbadea8830e7dbb87d",
+            "web": "1:1017440772168:web:b7e5f09b69b9a731dbb87d"
+          }
+        }
+      }
+    }
+  }
+}
