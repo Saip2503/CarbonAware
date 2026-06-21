@@ -62,6 +62,7 @@ class AuthRepository {
         email: email,
         creationDate: DateTime.now(),
         dailyGoalKgCO2: 6.8, // 6.8 kg CO2e is default
+        isOnboarded: false, // Onboarding required
       );
 
       await _firestore
@@ -98,6 +99,7 @@ class AuthRepository {
           email: user.email ?? '',
           creationDate: DateTime.now(),
           dailyGoalKgCO2: 6.8,
+          isOnboarded: false, // Onboarding required
         );
         await _firestore
             .collection('users')
@@ -117,5 +119,14 @@ class AuthRepository {
       _auth.signOut(),
       _googleSignIn.signOut(),
     ]);
+  }
+
+  // Update user goal and onboard status
+  Future<void> updateUserGoalAndOnboardStatus(String uid, double dailyGoal) async {
+    if (uid.isEmpty) return;
+    await _firestore.collection('users').doc(uid).update({
+      'dailyGoalKgCO2': dailyGoal,
+      'isOnboarded': true,
+    });
   }
 }

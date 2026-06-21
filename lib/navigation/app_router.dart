@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../features/auth/models/user_profile.dart';
 import '../features/auth/providers/auth_providers.dart';
 import '../features/auth/views/login_screen.dart';
 import '../features/auth/views/register_screen.dart';
+import '../features/auth/views/goal_setup_screen.dart';
 import '../features/dashboard/views/dashboard_screen.dart';
 import '../features/logging/views/quick_log_screen.dart';
 import '../features/insights/views/insights_panel.dart';
@@ -86,13 +88,14 @@ final routerProvider = Provider<GoRouter>((ref) {
   // Listen to authState changes to refresh router redirect
   final authStateAsync = ref.watch(authStateProvider);
 
-  return GoRouter(
+  final router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/dashboard',
     redirect: (BuildContext context, GoRouterState state) {
       final user = authStateAsync.value;
       final isLoggingIn = state.uri.path == '/login';
       final isRegistering = state.uri.path == '/register';
+      final isGoalSetup = state.uri.path == '/goal-setup';
 
       // If user is null, they must go to login or register
       if (user == null) {
@@ -100,8 +103,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         return '/login';
       }
 
-      // If user is logged in, redirect them away from login/register to dashboard
-      if (isLoggingIn || isRegistering) {
+      // If user is logged in, fetch userProfile to see if onboarded
+      final userProfile = ref.read(userProfileProvider).value;
+
+      if (userProfile != null && !userProfile.isOnboarded) {
+        if (isGoalSetup) return null;
+        return '/goal-setup';
+      }
+
+      // If user is logged in and onboarded, redirect away from auth screens & goal-setup
+      if (isLoggingIn || isRegistering || isGoalSetup) {
         return '/dashboard';
       }
 
@@ -117,6 +128,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/goal-setup',
+        builder: (context, state) => const GoalSetupScreen(),
       ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
@@ -149,10 +164,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
+
+  // Automatically refresh route when userProfile state updates (e.g. finishes loading or isOnboarded changes)
+  ref.listen<AsyncValue<UserProfile?>>(userProfileProvider, (previous, next) {
+    router.refresh();
+  });
+
+  return router;
 });
 
 // Helper class to convert stream to listenable for GoRouter refresh
 class _GoRouterRefreshStream extends ChangeNotifier {
+  // ignore: unused_field
   late final List<dynamic> _subscriptions;
 
   _GoRouterRefreshStream(Stream<dynamic> stream) {

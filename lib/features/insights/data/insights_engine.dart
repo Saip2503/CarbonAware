@@ -27,18 +27,14 @@ class InsightsEngine {
     }
 
     // Aggregate statistics
-    double totalTransport = 0.0;
     double totalDiet = 0.0;
-    double totalEnergy = 0.0;
     double totalMiles = 0.0;
     int carDays = 0;
     int meatHeavyDays = 0;
     int logCount = logs.length;
 
     for (var log in logs) {
-      totalTransport += CO2Calculator.calculateTransport(log.transportMiles, log.vehicleType);
       totalDiet += CO2Calculator.calculateDiet(log.dietType);
-      totalEnergy += CO2Calculator.calculateEnergy(log.electricityKwh);
       totalMiles += log.transportMiles;
       
       if (log.vehicleType == VehicleType.car && log.transportMiles > 0) {
@@ -49,9 +45,7 @@ class InsightsEngine {
       }
     }
 
-    final double avgTransport = totalTransport / logCount;
     final double avgDiet = totalDiet / logCount;
-    final double avgEnergy = totalEnergy / logCount;
     final double avgMiles = totalMiles / logCount;
 
     // 1. Dynamic Transport Insight

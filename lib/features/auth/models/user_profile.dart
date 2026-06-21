@@ -6,6 +6,7 @@ class UserProfile {
   final String email;
   final DateTime creationDate;
   final double dailyGoalKgCO2;
+  final bool isOnboarded;
 
   UserProfile({
     required this.uid,
@@ -13,6 +14,7 @@ class UserProfile {
     required this.email,
     required this.creationDate,
     required this.dailyGoalKgCO2,
+    this.isOnboarded = true,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,6 +24,7 @@ class UserProfile {
       'email': email,
       'creationDate': Timestamp.fromDate(creationDate),
       'dailyGoalKgCO2': dailyGoalKgCO2,
+      'isOnboarded': isOnboarded,
     };
   }
 
@@ -32,6 +35,7 @@ class UserProfile {
       email: map['email'] as String? ?? '',
       creationDate: (map['creationDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       dailyGoalKgCO2: (map['dailyGoalKgCO2'] as num?)?.toDouble() ?? 6.8, // 6.8 kg CO2e is a standard sustainable daily budget
+      isOnboarded: map['isOnboarded'] as bool? ?? true, // Default to true for existing profiles to avoid breaking them
     );
   }
 
@@ -41,6 +45,7 @@ class UserProfile {
     String? email,
     DateTime? creationDate,
     double? dailyGoalKgCO2,
+    bool? isOnboarded,
   }) {
     return UserProfile(
       uid: uid ?? this.uid,
@@ -48,6 +53,7 @@ class UserProfile {
       email: email ?? this.email,
       creationDate: creationDate ?? this.creationDate,
       dailyGoalKgCO2: dailyGoalKgCO2 ?? this.dailyGoalKgCO2,
+      isOnboarded: isOnboarded ?? this.isOnboarded,
     );
   }
 }

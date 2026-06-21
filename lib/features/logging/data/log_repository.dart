@@ -51,4 +51,15 @@ class LogRepository {
           return logs.reversed.toList();
         });
   }
+
+  // Delete daily log
+  Future<void> deleteDailyLog(String uid, String date) async {
+    if (uid.isEmpty) return;
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('daily_logs')
+        .doc(date)
+        .delete();
+  }
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../auth/providers/auth_providers.dart';
 import '../../logging/providers/log_providers.dart';
+import '../../insights/views/insight_card.dart';
 import '../widgets/category_breakdown.dart';
 import '../widgets/goal_indicator.dart';
 import '../widgets/weekly_chart.dart';
@@ -133,6 +134,10 @@ class DashboardScreen extends ConsumerWidget {
                               }
                             },
                           ),
+                          const SizedBox(height: 20),
+
+                          // AI Assistant Smart Tips Card
+                          const InsightCard(),
                           const SizedBox(height: 20),
 
                           // Weekly Chart

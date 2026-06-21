@@ -80,21 +80,44 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
                 const SizedBox(height: 32),
 
                 // Submit Button
-                Semantics(
-                  label: 'Save Log Button',
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : () => _saveLog(todayStr),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Semantics(
+                      label: 'Save Log Button',
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : () => _saveLog(todayStr),
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Save Daily Log'),
+                      ),
+                    ),
+                    if (todaysLogAsync.value != null) ...[
+                      const SizedBox(height: 12),
+                      Semantics(
+                        label: 'Delete Today\'s Log Button',
+                        child: OutlinedButton(
+                          onPressed: _isLoading ? null : () => _deleteLog(todayStr),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.error,
+                            side: const BorderSide(color: AppColors.error),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          )
-                        : const Text('Save Daily Log'),
-                  ),
+                          ),
+                          child: const Text('Delete Today\'s Log'),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 50),
               ],
@@ -103,6 +126,59 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _deleteLog(String todayStr) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final user = ref.read(authStateProvider).value;
+      if (user == null) {
+        throw Exception('User must be logged in to delete logs.');
+      }
+
+      final logRepo = ref.read(logRepositoryProvider);
+      await logRepo.deleteDailyLog(user.uid, todayStr);
+
+      // Invalidate providers to force reload
+      ref.invalidate(todaysLogProvider);
+      ref.invalidate(recentLogsStreamProvider);
+
+      setState(() {
+        _transportMiles = 0.0;
+        _vehicleType = VehicleType.car;
+        _dietType = DietType.average;
+        _electricityKwh = 0.0;
+        _isInit = false; // Allow state re-initialization if new log is created
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Daily log deleted successfully!'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        context.go('/dashboard');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete log: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Widget _buildRealTimeBadge(ThemeData theme, double totalCO2) {
