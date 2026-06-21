@@ -321,55 +321,43 @@ class _GoogleLogo extends StatelessWidget {
 class _GoogleLogoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final double w = size.width;
-    final double h = size.height;
+    final double length = size.width;
+    final double arcThickness = length / 4.5;
+    
+    // Inset bounds to prevent clipping of the stroke
+    final Rect bounds = Rect.fromLTWH(
+      arcThickness / 2, 
+      arcThickness / 2, 
+      length - arcThickness, 
+      length - arcThickness,
+    );
+    
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = arcThickness;
 
-    final Paint blue = Paint()..color = const Color(0xFF4285F4);
-    final Paint red = Paint()..color = const Color(0xFFEA4335);
-    final Paint yellow = Paint()..color = const Color(0xFFFBBC05);
-    final Paint green = Paint()..color = const Color(0xFF34A853);
-    final Paint white = Paint()..color = Colors.white;
+    void drawArc(double startAngle, double sweepAngle, Color color) {
+      canvas.drawArc(bounds, startAngle, sweepAngle, false, paint..color = color);
+    }
 
-    // Draw circle background
-    canvas.drawCircle(Offset(w / 2, h / 2), w / 2, blue);
+    // Drawing the arcs of the "G"
+    drawArc(3.5, 1.9, const Color(0xFFEA4335)); // Red
+    drawArc(2.5, 1.0, const Color(0xFFFBBC05)); // Yellow
+    drawArc(0.9, 1.6, const Color(0xFF34A853)); // Green
+    drawArc(-0.18, 1.1, const Color(0xFF4285F4)); // Blue
 
-    // White inner area (simplified "G" with color blocks)
-    final rect = Rect.fromLTWH(w * 0.1, h * 0.1, w * 0.8, h * 0.8);
-
-    // Red top-left quarter
-    final pathRed = Path()
-      ..moveTo(w / 2, h / 2)
-      ..lineTo(w * 0.1, h * 0.1)
-      ..arcTo(rect, -3.14, 1.57, false)
-      ..close();
-    canvas.drawPath(pathRed, red);
-
-    // Yellow top-right quarter
-    final pathYellow = Path()
-      ..moveTo(w / 2, h / 2)
-      ..lineTo(w * 0.9, h * 0.1)
-      ..arcTo(rect, -1.57, 1.57, false)
-      ..close();
-    canvas.drawPath(pathYellow, yellow);
-
-    // Green bottom-right quarter
-    final pathGreen = Path()
-      ..moveTo(w / 2, h / 2)
-      ..lineTo(w * 0.9, h * 0.9)
-      ..arcTo(rect, 0, 1.57, false)
-      ..close();
-    canvas.drawPath(pathGreen, green);
-
-    // Blue bottom-left quarter
-    final pathBlue = Path()
-      ..moveTo(w / 2, h / 2)
-      ..lineTo(w * 0.1, h * 0.9)
-      ..arcTo(rect, 1.57, 1.57, false)
-      ..close();
-    canvas.drawPath(pathBlue, blue);
-
-    // White circle in center (to simulate the G cutout)
-    canvas.drawCircle(Offset(w / 2, h / 2), w * 0.28, white);
+    // Draw the horizontal blue bar extending to the center
+    final barPaint = Paint()
+      ..color = const Color(0xFF4285F4)
+      ..style = PaintingStyle.fill;
+      
+    final barRect = Rect.fromLTRB(
+      length / 2, 
+      length / 2 - arcThickness / 2, 
+      length - arcThickness / 2, 
+      length / 2 + arcThickness / 2,
+    );
+    canvas.drawRect(barRect, barPaint);
   }
 
   @override
