@@ -5,11 +5,20 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user_profile.dart';
 
 class AuthRepository {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: '1017440772168-n7jrfuqm8impqgcrvkg0mh9tqgib6dv8.apps.googleusercontent.com',
-  );
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+  final GoogleSignIn _googleSignIn;
+
+  AuthRepository({
+    FirebaseAuth? auth,
+    FirebaseFirestore? firestore,
+    GoogleSignIn? googleSignIn,
+  })  : _auth = auth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _googleSignIn = googleSignIn ??
+            GoogleSignIn(
+              clientId: '1017440772168-n7jrfuqm8impqgcrvkg0mh9tqgib6dv8.apps.googleusercontent.com',
+            );
 
   // Stream of auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
