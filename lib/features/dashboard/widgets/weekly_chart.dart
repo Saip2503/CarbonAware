@@ -54,7 +54,6 @@ class WeeklyChart extends StatelessWidget {
             touchTooltipData: BarTouchTooltipData(
               getTooltipColor: (_) => AppColors.surface,
               tooltipBorder: const BorderSide(color: AppColors.glassBorder),
-              tooltipRoundedRadius: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final dateStr = chartData[groupIndex].key;
                 final val = rod.toY;
