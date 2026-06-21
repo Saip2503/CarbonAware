@@ -28,30 +28,35 @@ class DefaultFirebaseOptions {
   }
 
   // Placeholder configurations for web, android, and ios.
-  // Replace these by running `flutterfire configure` or filling in your actual keys.
+
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'placeholder-apiKey-web-carbonaware',
-    appId: '1:1234567890:web:abcdef123456',
-    messagingSenderId: '1234567890',
-    projectId: 'carbonaware-placeholder',
-    authDomain: 'carbonaware-placeholder.firebaseapp.com',
-    storageBucket: 'carbonaware-placeholder.appspot.com',
+    apiKey: 'AIzaSyAwlEsCTs3NlMglP2QqHjcwiyvhGGy7XuY',
+    appId: '1:1017440772168:web:b7e5f09b69b9a731dbb87d',
+    messagingSenderId: '1017440772168',
+    projectId: 'carbonaware-500117',
+    authDomain: 'carbonaware-500117.firebaseapp.com',
+    storageBucket: 'carbonaware-500117.firebasestorage.app',
+    measurementId: 'G-N4Z87CLR0G',
   );
 
+  // Replace these by running `flutterfire configure` or filling in your actual keys.
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'placeholder-apiKey-android-carbonaware',
-    appId: '1:1234567890:android:abcdef123456',
-    messagingSenderId: '1234567890',
-    projectId: 'carbonaware-placeholder',
-    storageBucket: 'carbonaware-placeholder.appspot.com',
+    apiKey: 'AIzaSyAjPxYG5p3GWLmhoO7NDcJ3Wv0kmjDFqVE',
+    appId: '1:1017440772168:android:4fd24dea78f0698adbb87d',
+    messagingSenderId: '1017440772168',
+    projectId: 'carbonaware-500117',
+    storageBucket: 'carbonaware-500117.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'placeholder-apiKey-ios-carbonaware',
-    appId: '1:1234567890:ios:abcdef123456',
-    messagingSenderId: '1234567890',
-    projectId: 'carbonaware-placeholder',
-    storageBucket: 'carbonaware-placeholder.appspot.com',
+    apiKey: 'AIzaSyDoBbjyV8xwJ9-8cN28JmLzuES-1VTbEwA',
+    appId: '1:1017440772168:ios:fd8acbadea8830e7dbb87d',
+    messagingSenderId: '1017440772168',
+    projectId: 'carbonaware-500117',
+    storageBucket: 'carbonaware-500117.firebasestorage.app',
+    iosClientId: '1017440772168-knsorslil1el1lpukvn3rn7dnosccq9b.apps.googleusercontent.com',
     iosBundleId: 'com.example.carbonAware',
   );
+
 }
