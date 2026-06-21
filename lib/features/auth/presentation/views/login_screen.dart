@@ -134,7 +134,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               width: 18,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : _GoogleLogo(),
+                          : Image.asset(
+                              'assets/googlelogo.png',
+                              width: 20,
+                              height: 20,
+                            ),
                       label: const Text('Continue with Google'),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -305,61 +309,4 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     );
   }
-}
-
-/// Paints the Google "G" logo using CustomPaint for accurate branding.
-class _GoogleLogo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: const Size(20, 20),
-      painter: _GoogleLogoPainter(),
-    );
-  }
-}
-
-class _GoogleLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final double length = size.width;
-    final double arcThickness = length / 4.5;
-    
-    // Inset bounds to prevent clipping of the stroke
-    final Rect bounds = Rect.fromLTWH(
-      arcThickness / 2, 
-      arcThickness / 2, 
-      length - arcThickness, 
-      length - arcThickness,
-    );
-    
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = arcThickness;
-
-    void drawArc(double startAngle, double sweepAngle, Color color) {
-      canvas.drawArc(bounds, startAngle, sweepAngle, false, paint..color = color);
-    }
-
-    // Drawing the arcs of the "G"
-    drawArc(3.5, 1.9, const Color(0xFFEA4335)); // Red
-    drawArc(2.5, 1.0, const Color(0xFFFBBC05)); // Yellow
-    drawArc(0.9, 1.6, const Color(0xFF34A853)); // Green
-    drawArc(-0.18, 1.1, const Color(0xFF4285F4)); // Blue
-
-    // Draw the horizontal blue bar extending to the center
-    final barPaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.fill;
-      
-    final barRect = Rect.fromLTRB(
-      length / 2, 
-      length / 2 - arcThickness / 2, 
-      length - arcThickness / 2, 
-      length / 2 + arcThickness / 2,
-    );
-    canvas.drawRect(barRect, barPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
