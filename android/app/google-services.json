@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1017440772168",
+    "project_id": "carbonaware-500117",
+    "storage_bucket": "carbonaware-500117.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017440772168:android:4fd24dea78f0698adbb87d",
+        "android_client_info": {
+          "package_name": "com.example.carbon_aware"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017440772168-leg92kfvpf8vorufmi2ifr5n5vfi6dhc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjPxYG5p3GWLmhoO7NDcJ3Wv0kmjDFqVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017440772168-leg92kfvpf8vorufmi2ifr5n5vfi6dhc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1017440772168-knsorslil1el1lpukvn3rn7dnosccq9b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carbonAware"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

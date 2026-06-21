@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user_profile.dart';
 
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // Stream of auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -52,6 +54,7 @@ class AuthRepository {
 
     final user = credential.user;
     if (user != null) {
+      await user.updateDisplayName(displayName);
       // Create user profile in Firestore
       final userProfile = UserProfile(
         uid: user.uid,
@@ -70,8 +73,49 @@ class AuthRepository {
     return credential;
   }
 
+  // Sign In with Google
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null; // User cancelled
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+      final user = userCredential.user;
+
+      // Create Firestore profile if new user
+      if (user != null && userCredential.additionalUserInfo?.isNewUser == true) {
+        final userProfile = UserProfile(
+          uid: user.uid,
+          displayName: user.displayName ?? 'EcoWarrior',
+          email: user.email ?? '',
+          creationDate: DateTime.now(),
+          dailyGoalKgCO2: 6.8,
+        );
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(userProfile.toMap());
+      }
+
+      return userCredential;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Sign Out
   Future<void> signOut() async {
-    await _auth.signOut();
+    await Future.wait([
+      _auth.signOut(),
+      _googleSignIn.signOut(),
+    ]);
   }
 }
