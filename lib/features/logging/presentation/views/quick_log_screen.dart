@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/utils/co2_calculator.dart';
-import '../../auth/providers/auth_providers.dart';
-import '../models/daily_log.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/co2_calculator.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../domain/daily_log.dart';
 import '../providers/log_providers.dart';
 
 class QuickLogScreen extends ConsumerStatefulWidget {
@@ -15,7 +15,8 @@ class QuickLogScreen extends ConsumerStatefulWidget {
 }
 
 class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
-  double _transportMiles = 0.0;
+  double _transportDistance = 0.0;
+  bool _isKm = false;
   VehicleType _vehicleType = VehicleType.car;
   DietType _dietType = DietType.average;
   double _electricityKwh = 0.0;
@@ -33,7 +34,8 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
     todaysLogAsync.whenData((log) {
       if (log != null && !_isInit) {
         setState(() {
-          _transportMiles = log.transportMiles;
+          _transportDistance = log.transportDistance;
+          _isKm = log.isKm;
           _vehicleType = log.vehicleType;
           _dietType = log.dietType;
           _electricityKwh = log.electricityKwh;
@@ -43,10 +45,11 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
     });
 
     final currentTotal = CO2Calculator.calculateTotal(
-      miles: _transportMiles,
+      distance: _transportDistance,
       vehicleType: _vehicleType,
       dietType: _dietType,
       electricityKwh: _electricityKwh,
+      isKm: _isKm,
     );
 
     return Scaffold(
@@ -147,7 +150,8 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
       ref.invalidate(recentLogsStreamProvider);
 
       setState(() {
-        _transportMiles = 0.0;
+        _transportDistance = 0.0;
+        _isKm = false;
         _vehicleType = VehicleType.car;
         _dietType = DietType.average;
         _electricityKwh = 0.0;
@@ -241,22 +245,64 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            Text(
-              'Daily Commute: ${_transportMiles.toStringAsFixed(1)} miles',
-              style: theme.textTheme.bodyMedium,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Daily Commute: ${_transportDistance.toStringAsFixed(1)} ${_isKm ? 'km' : 'miles'}',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+                SizedBox(
+                  height: 36,
+                  child: SegmentedButton<bool>(
+                    showSelectedIcon: false,
+                    style: SegmentedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    segments: const [
+                      ButtonSegment<bool>(
+                        value: false,
+                        label: Text('Miles', style: TextStyle(fontSize: 12)),
+                      ),
+                      ButtonSegment<bool>(
+                        value: true,
+                        label: Text('Km', style: TextStyle(fontSize: 12)),
+                      ),
+                    ],
+                    selected: {_isKm},
+                    onSelectionChanged: (Set<bool> newSelection) {
+                      final val = newSelection.first;
+                      if (val != _isKm) {
+                        setState(() {
+                          _isKm = val;
+                          if (_isKm) {
+                            _transportDistance = (_transportDistance * 1.609344).clamp(0.0, 160.0);
+                          } else {
+                            _transportDistance = (_transportDistance * 0.621371).clamp(0.0, 100.0);
+                          }
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
+            const SizedBox(height: 8),
             Semantics(
               label: 'Commute distance slider',
               child: Slider(
-                value: _transportMiles,
+                value: _transportDistance,
                 min: 0,
-                max: 100,
-                divisions: 100,
+                max: _isKm ? 160.0 : 100.0,
+                divisions: _isKm ? 160 : 100,
                 activeColor: AppColors.primary,
                 inactiveColor: AppColors.glassBorder,
                 onChanged: (val) {
                   setState(() {
-                    _transportMiles = val;
+                    _transportDistance = val;
                   });
                 },
               ),
@@ -446,15 +492,17 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
       }
 
       final totalCO2 = CO2Calculator.calculateTotal(
-        miles: _transportMiles,
+        distance: _transportDistance,
         vehicleType: _vehicleType,
         dietType: _dietType,
         electricityKwh: _electricityKwh,
+        isKm: _isKm,
       );
 
       final log = DailyLog(
         date: todayStr,
-        transportMiles: _transportMiles,
+        transportDistance: _transportDistance,
+        isKm: _isKm,
         vehicleType: _vehicleType,
         dietType: _dietType,
         electricityKwh: _electricityKwh,

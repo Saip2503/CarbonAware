@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../auth/providers/auth_providers.dart';
-import '../data/log_repository.dart';
-import '../models/daily_log.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../data/log_repository.dart';
+import '../../domain/daily_log.dart';
 
 final logRepositoryProvider = Provider<LogRepository>((ref) {
   return LogRepository();

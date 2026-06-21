@@ -3,14 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:carbon_aware/features/dashboard/views/dashboard_screen.dart';
-import 'package:carbon_aware/features/auth/providers/auth_providers.dart';
-import 'package:carbon_aware/features/auth/models/user_profile.dart';
+import 'package:carbon_aware/features/dashboard/presentation/views/dashboard_screen.dart';
+import 'package:carbon_aware/features/auth/presentation/providers/auth_providers.dart';
+import 'package:carbon_aware/features/auth/domain/user_profile.dart';
 import 'package:carbon_aware/features/auth/data/auth_repository.dart';
-import 'package:carbon_aware/features/logging/providers/log_providers.dart';
-import 'package:carbon_aware/features/logging/models/daily_log.dart';
-import 'package:carbon_aware/features/insights/providers/insights_provider.dart';
-import 'package:carbon_aware/features/insights/models/insight.dart';
+import 'package:carbon_aware/features/logging/presentation/providers/log_providers.dart';
+import 'package:carbon_aware/features/logging/domain/daily_log.dart';
+import 'package:carbon_aware/features/insights/presentation/providers/insights_provider.dart';
+import 'package:carbon_aware/features/insights/domain/insight.dart';
 import 'package:carbon_aware/core/utils/co2_calculator.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
@@ -78,7 +78,8 @@ void main() {
     final testLogs = [
       DailyLog(
         date: DateTime.now().toIso8601String().substring(0, 10),
-        transportMiles: 10.0,
+        transportDistance: 10.0,
+        isKm: false,
         vehicleType: VehicleType.car,
         dietType: DietType.average,
         electricityKwh: 5.0,

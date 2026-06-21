@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/daily_log.dart';
+import '../domain/daily_log.dart';
 
 class LogRepository {
   final FirebaseFirestore _firestore;

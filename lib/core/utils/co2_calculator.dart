@@ -80,8 +80,9 @@ enum DietType {
 }
 
 class CO2Calculator {
-  static double calculateTransport(double miles, VehicleType type) {
-    if (miles < 0) return 0.0;
+  static double calculateTransport(double distance, VehicleType type, {bool isKm = false}) {
+    if (distance < 0) return 0.0;
+    final miles = isKm ? distance * 0.621371 : distance;
     switch (type) {
       case VehicleType.car:
         return miles * kCarEmission;
@@ -115,12 +116,13 @@ class CO2Calculator {
   }
 
   static double calculateTotal({
-    required double miles,
+    required double distance,
     required VehicleType vehicleType,
     required DietType dietType,
     required double electricityKwh,
+    bool isKm = false,
   }) {
-    final transport = calculateTransport(miles, vehicleType);
+    final transport = calculateTransport(distance, vehicleType, isKm: isKm);
     final diet = calculateDiet(dietType);
     final energy = calculateEnergy(electricityKwh);
     return transport + diet + energy;

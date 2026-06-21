@@ -90,35 +90,64 @@ lib/
 │       └── co2_calculator.dart   # Conversion logic engine (pure functions)
 ├── features/
 │   ├── auth/
-│   │   ├── data/auth_repository.dart     # Sign In & Registration using Firebase Auth
-│   │   ├── models/user_profile.dart      # User Profile data model
-│   │   ├── providers/auth_providers.dart # Riverpod Authentication State providers
-│   │   └── views/
-│   │       ├── login_screen.dart         # Login UI with Form validation
-│   │       └── register_screen.dart      # Register UI with profile creation
+│   │   ├── domain/
+│   │   │   └── user_profile.dart # User Profile data model
+│   │   ├── data/
+│   │   │   └── auth_repository.dart # Sign In & Registration using Firebase Auth
+│   │   └── presentation/
+│   │       ├── providers/
+│   │       │   └── auth_providers.dart # Riverpod Authentication State providers
+│   │       └── views/
+│   │           ├── goal_setup_screen.dart # Goal setup UI
+│   │           ├── login_screen.dart # Login UI with Form validation
+│   │           └── register_screen.dart # Register UI with profile creation
 │   ├── logging/
-│   │   ├── data/log_repository.dart      # Firestore Daily Log sub-collection service
-│   │   ├── models/daily_log.dart         # Daily Log data model
-│   │   ├── providers/log_providers.dart  # Riverpod Streams of user activity logs
-│   │   └── views/quick_log_screen.dart   # Quick Log view with sliders and real-time estimate
+│   │   ├── domain/
+│   │   │   └── daily_log.dart    # Daily Log data model
+│   │   ├── data/
+│   │   │   └── log_repository.dart # Firestore Daily Log service
+│   │   └── presentation/
+│   │       ├── providers/
+│   │       │   └── log_providers.dart # Riverpod Streams of user activity logs
+│   │       └── views/
+│   │           └── quick_log_screen.dart # Quick Log view with sliders and unit toggles
 │   ├── dashboard/
-│   │   ├── views/dashboard_screen.dart   # Dashboard summarizing logs, weekly chart, and goal progress
-│   │   └── widgets/
-│   │       ├── weekly_chart.dart         # Weekly Emissions Bar Chart (fl_chart)
-│   │       ├── category_breakdown.dart   # Donut Chart with Category Breakdown (fl_chart)
-│   │       └── goal_indicator.dart       # Circular Progress indicator comparing daily goal
+│   │   └── presentation/
+│   │       ├── views/
+│   │       │   └── dashboard_screen.dart # Dashboard UI summarizing logs
+│   │       └── widgets/
+│   │           ├── category_breakdown.dart # Donut Chart with Category Breakdown (fl_chart)
+│   │           ├── goal_indicator.dart # Circular Progress indicator
+│   │           └── weekly_chart.dart # Weekly Emissions Bar Chart (fl_chart)
 │   └── insights/
-│       ├── data/insights_engine.dart     # Smart logic engine aggregating user stats
-│       ├── models/insight.dart           # Insight data model & priority enums
-│       ├── providers/insight_providers.dart # Riverpod Insights providers
-│       └── views/insights_panel.dart     # Insights UI presenting prioritized saving tips
+│       ├── domain/
+│       │   └── insight.dart      # Insight data model & priority enums
+│       ├── data/
+│       │   ├── ai_service.dart   # Generative AI tip builder
+│       │   └── insights_engine.dart # Smart logic engine aggregating user stats
+│       └── presentation/
+│           ├── providers/
+│           │   ├── insights_provider.dart # Riverpod AI Insights provider
+│           │   └── insight_providers.dart # Riverpod Rule-based Insights provider
+│           └── views/
+│               ├── insight_card.dart # UI card displaying AI/fallback insights
+│               └── insights_panel.dart # Insights UI panel presenting prioritized tips
 └── navigation/
     └── app_router.dart       # GoRouter configuration with Auth Guards
 ```
 
 ---
 
-## ⚡ Setup & Execution Instructions
+## ⚡ Performance & Web Efficiency
+To optimize memory, CPU, and rendering performance on the web target (addressing typical Flutter Web overhead), the platform employs several state-of-the-art strategies:
+1. **WASM Compilation Target:** We build and deploy the app using the new `--wasm` compilation target (`flutter build web --wasm`). Compiling to WebAssembly significantly reduces CPU overhead, optimizes garbage collection, and ensures near-native UI frame rates.
+2. **Instant inline CSS Splash Screen:** In `web/index.html`, we've embedded a lightweight inline CSS splash screen that renders immediately while the heavy Dart runtime (`main.dart.js` / WASM) is loading. This dramatically reduces First Contentful Paint (FCP) and improves the perceived speed.
+3. **Resource Preconnecting:** We preconnect to external font hosting services (such as `fonts.gstatic.com`) directly in the HTML header to eliminate network layout shifting during startup.
+4. **Riverpod Granular Rebuilds:** Widgets listen to specific, narrow state providers to minimize rebuild cycles, keeping garbage collection cycles short and reducing memory consumption under profiling tools.
+
+---
+
+## ⚙️ Setup & Execution Instructions
 
 ### Prerequisites
 * Flutter SDK (version `3.32.8` or compatible)

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../features/auth/models/user_profile.dart';
-import '../features/auth/providers/auth_providers.dart';
-import '../features/auth/views/login_screen.dart';
-import '../features/auth/views/register_screen.dart';
-import '../features/auth/views/goal_setup_screen.dart';
-import '../features/dashboard/views/dashboard_screen.dart';
-import '../features/logging/views/quick_log_screen.dart';
-import '../features/insights/views/insights_panel.dart';
+import '../features/auth/domain/user_profile.dart';
+import '../features/auth/presentation/providers/auth_providers.dart';
+import '../features/auth/presentation/views/login_screen.dart';
+import '../features/auth/presentation/views/register_screen.dart';
+import '../features/auth/presentation/views/goal_setup_screen.dart';
+import '../features/dashboard/presentation/views/dashboard_screen.dart';
+import '../features/logging/presentation/views/quick_log_screen.dart';
+import '../features/insights/presentation/views/insights_panel.dart';
 
 // Shell layout wrapping dashboard, logging, and insights tabs
 class ShellNavigationWidget extends StatefulWidget {

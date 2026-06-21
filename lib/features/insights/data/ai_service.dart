@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../../logging/models/daily_log.dart';
-import '../models/insight.dart';
+import '../../logging/domain/daily_log.dart';
+import '../domain/insight.dart';
 import 'insights_engine.dart';
 
 class AiService {
@@ -31,7 +31,7 @@ class AiService {
 
       // Build data summary for prompt
       final logsSummary = logs.map((log) {
-        return '- Date: ${log.date}, Transport: ${log.transportMiles} miles (${log.vehicleType.displayName}), Diet: ${log.dietType.displayName}, Energy: ${log.electricityKwh} kWh, Total CO2: ${log.totalCO2Kg.toStringAsFixed(1)} kg';
+        return '- Date: ${log.date}, Transport: ${log.transportDistance} ${log.isKm ? 'km' : 'miles'} (${log.vehicleType.displayName}), Diet: ${log.dietType.displayName}, Energy: ${log.electricityKwh} kWh, Total CO2: ${log.totalCO2Kg.toStringAsFixed(1)} kg';
       }).join('\n');
 
       final prompt = '''

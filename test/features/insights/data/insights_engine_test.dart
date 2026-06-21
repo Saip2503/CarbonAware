@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:carbon_aware/features/insights/data/insights_engine.dart';
-import 'package:carbon_aware/features/insights/models/insight.dart';
-import 'package:carbon_aware/features/logging/models/daily_log.dart';
+import 'package:carbon_aware/features/insights/domain/insight.dart';
+import 'package:carbon_aware/features/logging/domain/daily_log.dart';
 import 'package:carbon_aware/core/utils/co2_calculator.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -25,7 +25,8 @@ void main() {
       final logs = [
         DailyLog(
           date: '2026-06-21',
-          transportMiles: 20.0, // High miles
+          transportDistance: 20.0, // High distance
+          isKm: false,
           vehicleType: VehicleType.car,
           dietType: DietType.vegetarian,
           electricityKwh: 2.0,
@@ -46,7 +47,8 @@ void main() {
       final logs = [
         DailyLog(
           date: '2026-06-21',
-          transportMiles: 0.0,
+          transportDistance: 0.0,
+          isKm: false,
           vehicleType: VehicleType.walk,
           dietType: DietType.meatHeavy,
           electricityKwh: 2.0,
@@ -67,7 +69,8 @@ void main() {
       final logs = [
         DailyLog(
           date: '2026-06-21',
-          transportMiles: 20.0,
+          transportDistance: 20.0,
+          isKm: false,
           vehicleType: VehicleType.car,
           dietType: DietType.meatHeavy,
           electricityKwh: 2.0,

@@ -4,11 +4,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:carbon_aware/features/logging/views/quick_log_screen.dart';
-import 'package:carbon_aware/features/logging/models/daily_log.dart';
-import 'package:carbon_aware/features/logging/providers/log_providers.dart';
+import 'package:carbon_aware/features/logging/presentation/views/quick_log_screen.dart';
+import 'package:carbon_aware/features/logging/domain/daily_log.dart';
+import 'package:carbon_aware/features/logging/presentation/providers/log_providers.dart';
 import 'package:carbon_aware/features/logging/data/log_repository.dart';
-import 'package:carbon_aware/features/auth/providers/auth_providers.dart';
+import 'package:carbon_aware/features/auth/presentation/providers/auth_providers.dart';
 import 'package:carbon_aware/core/utils/co2_calculator.dart';
 
 class MockLogRepository extends Mock implements LogRepository {}
@@ -32,7 +32,8 @@ void main() {
     registerFallbackValue(
       DailyLog(
         date: '2026-06-22',
-        transportMiles: 0.0,
+        transportDistance: 0.0,
+        isKm: false,
         vehicleType: VehicleType.car,
         dietType: DietType.average,
         electricityKwh: 0.0,
@@ -89,7 +90,8 @@ void main() {
     testWidgets('populates fields if today\'s log exists', (WidgetTester tester) async {
       final existingLog = DailyLog(
         date: '2026-06-22',
-        transportMiles: 25.0,
+        transportDistance: 25.0,
+        isKm: false,
         vehicleType: VehicleType.bus,
         dietType: DietType.vegetarian,
         electricityKwh: 12.0,
@@ -151,7 +153,8 @@ void main() {
     testWidgets('deletes daily log successfully and navigates to dashboard', (WidgetTester tester) async {
       final existingLog = DailyLog(
         date: '2026-06-22',
-        transportMiles: 5.0,
+        transportDistance: 5.0,
+        isKm: false,
         vehicleType: VehicleType.car,
         dietType: DietType.average,
         electricityKwh: 2.0,

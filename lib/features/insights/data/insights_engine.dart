@@ -3,8 +3,8 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../core/constants/emission_factors.dart';
 import '../../../core/utils/co2_calculator.dart';
-import '../../logging/models/daily_log.dart';
-import '../models/insight.dart';
+import '../../logging/domain/daily_log.dart';
+import '../domain/insight.dart';
 
 class InsightsEngine {
   static Future<List<Insight>> generateInsights(List<DailyLog> logs) async {
@@ -20,7 +20,8 @@ class InsightsEngine {
       // Prepare log data for the prompt
       final logsData = logs.map((l) => {
         'date': l.date,
-        'transportMiles': l.transportMiles,
+        'transportDistance': l.transportDistance,
+        'isKm': l.isKm,
         'vehicleType': l.vehicleType.name,
         'dietType': l.dietType.name,
         'electricityKwh': l.electricityKwh,
@@ -116,9 +117,10 @@ class InsightsEngine {
 
     for (var log in logs) {
       totalDiet += CO2Calculator.calculateDiet(log.dietType);
-      totalMiles += log.transportMiles;
+      final double miles = log.isKm ? log.transportDistance * 0.621371 : log.transportDistance;
+      totalMiles += miles;
       
-      if (log.vehicleType == VehicleType.car && log.transportMiles > 0) {
+      if (log.vehicleType == VehicleType.car && miles > 0) {
         carDays++;
       }
       if (log.dietType == DietType.meatHeavy) {

@@ -62,7 +62,7 @@ void main() {
   group('CO2Calculator Combined Total Tests', () {
     test('Aggregate total matches sum of components', () {
       final total = CO2Calculator.calculateTotal(
-        miles: 10.0,
+        distance: 10.0,
         vehicleType: VehicleType.car,
         dietType: DietType.vegan,
         electricityKwh: 20.0,
@@ -70,6 +70,19 @@ void main() {
 
       final expected = (10.0 * 0.404) + 2.89 + (20.0 * 0.417);
       expect(total, closeTo(expected, 0.001));
+    });
+
+    test('Aggregate total matches sum of components with Km', () {
+      final total = CO2Calculator.calculateTotal(
+        distance: 16.0934, // ~10 miles in km
+        vehicleType: VehicleType.car,
+        dietType: DietType.vegan,
+        electricityKwh: 20.0,
+        isKm: true,
+      );
+
+      final expected = (10.0 * 0.404) + 2.89 + (20.0 * 0.417);
+      expect(total, closeTo(expected, 0.01));
     });
   });
 }

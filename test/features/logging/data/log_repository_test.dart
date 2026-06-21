@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carbon_aware/features/logging/data/log_repository.dart';
-import 'package:carbon_aware/features/logging/models/daily_log.dart';
+import 'package:carbon_aware/features/logging/domain/daily_log.dart';
 import 'package:carbon_aware/core/utils/co2_calculator.dart';
 
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
@@ -39,7 +39,8 @@ void main() {
   group('LogRepository Tests', () {
     final testLog = DailyLog(
       date: '2026-06-22',
-      transportMiles: 10.0,
+      transportDistance: 10.0,
+      isKm: false,
       vehicleType: VehicleType.car,
       dietType: DietType.average,
       electricityKwh: 5.0,
@@ -66,7 +67,8 @@ void main() {
       when(() => mockSnapshot.id).thenReturn('2026-06-22');
       when(() => mockSnapshot.data()).thenReturn({
         'date': '2026-06-22',
-        'transportMiles': 10.0,
+        'transportDistance': 10.0,
+        'isKm': false,
         'vehicleType': 'car',
         'dietType': 'average',
         'electricityKwh': 5.0,
@@ -114,7 +116,8 @@ void main() {
       when(() => mockDocSnapshot.id).thenReturn('2026-06-22');
       when(() => mockDocSnapshot.data()).thenReturn({
         'date': '2026-06-22',
-        'transportMiles': 15.0,
+        'transportDistance': 15.0,
+        'isKm': false,
         'vehicleType': 'bus',
         'dietType': 'vegan',
         'electricityKwh': 3.0,

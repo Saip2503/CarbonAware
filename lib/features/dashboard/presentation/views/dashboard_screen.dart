@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../auth/providers/auth_providers.dart';
-import '../../logging/providers/log_providers.dart';
-import '../../insights/views/insight_card.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../../logging/presentation/providers/log_providers.dart';
+import '../../../insights/presentation/views/insight_card.dart';
 import '../widgets/category_breakdown.dart';
 import '../widgets/goal_indicator.dart';
 import '../widgets/weekly_chart.dart';

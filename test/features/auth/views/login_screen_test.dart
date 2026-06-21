@@ -4,8 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:carbon_aware/features/auth/views/login_screen.dart';
-import 'package:carbon_aware/features/auth/providers/auth_providers.dart';
+import 'package:carbon_aware/features/auth/presentation/views/login_screen.dart';
+import 'package:carbon_aware/features/auth/presentation/providers/auth_providers.dart';
 import 'package:carbon_aware/features/auth/data/auth_repository.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}

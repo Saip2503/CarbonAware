@@ -3,7 +3,8 @@ import '../../../core/utils/co2_calculator.dart';
 
 class DailyLog {
   final String date; // YYYY-MM-DD
-  final double transportMiles;
+  final double transportDistance;
+  final bool isKm;
   final VehicleType vehicleType;
   final DietType dietType;
   final double electricityKwh;
@@ -12,7 +13,8 @@ class DailyLog {
 
   DailyLog({
     required this.date,
-    required this.transportMiles,
+    required this.transportDistance,
+    required this.isKm,
     required this.vehicleType,
     required this.dietType,
     required this.electricityKwh,
@@ -23,7 +25,8 @@ class DailyLog {
   Map<String, dynamic> toMap() {
     return {
       'date': date,
-      'transportMiles': transportMiles,
+      'transportDistance': transportDistance,
+      'isKm': isKm,
       'vehicleType': vehicleType.name,
       'dietType': dietType.toFirestoreString(),
       'electricityKwh': electricityKwh,
@@ -35,20 +38,27 @@ class DailyLog {
   factory DailyLog.fromMap(Map<String, dynamic> map, String docId) {
     final vehicle = VehicleType.fromString(map['vehicleType'] as String? ?? 'car');
     final diet = DietType.fromString(map['dietType'] as String? ?? 'average');
-    final miles = (map['transportMiles'] as num?)?.toDouble() ?? 0.0;
+    final isKm = map['isKm'] as bool? ?? false;
+    
+    // Migration: read transportDistance, fallback to transportMiles if missing
+    final distance = (map['transportDistance'] as num?)?.toDouble() ?? 
+                     (map['transportMiles'] as num?)?.toDouble() ?? 0.0;
+                     
     final kwh = (map['electricityKwh'] as num?)?.toDouble() ?? 0.0;
     
     // Fallback recalculate if stored value is missing
     final defaultTotal = CO2Calculator.calculateTotal(
-      miles: miles,
+      distance: distance,
       vehicleType: vehicle,
       dietType: diet,
       electricityKwh: kwh,
+      isKm: isKm,
     );
 
     return DailyLog(
       date: docId,
-      transportMiles: miles,
+      transportDistance: distance,
+      isKm: isKm,
       vehicleType: vehicle,
       dietType: diet,
       electricityKwh: kwh,
@@ -59,7 +69,8 @@ class DailyLog {
 
   DailyLog copyWith({
     String? date,
-    double? transportMiles,
+    double? transportDistance,
+    bool? isKm,
     VehicleType? vehicleType,
     DietType? dietType,
     double? electricityKwh,
@@ -68,7 +79,8 @@ class DailyLog {
   }) {
     return DailyLog(
       date: date ?? this.date,
-      transportMiles: transportMiles ?? this.transportMiles,
+      transportDistance: transportDistance ?? this.transportDistance,
+      isKm: isKm ?? this.isKm,
       vehicleType: vehicleType ?? this.vehicleType,
       dietType: dietType ?? this.dietType,
       electricityKwh: electricityKwh ?? this.electricityKwh,

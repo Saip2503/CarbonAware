@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:carbon_aware/features/auth/data/auth_repository.dart';
-import 'package:carbon_aware/features/auth/models/user_profile.dart';
+import 'package:carbon_aware/features/auth/domain/user_profile.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}

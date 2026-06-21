@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../logging/providers/log_providers.dart';
-import '../data/ai_service.dart';
-import '../models/insight.dart';
+import '../../../logging/presentation/providers/log_providers.dart';
+import '../../data/ai_service.dart';
+import '../../domain/insight.dart';
 
 final aiInsightProvider = FutureProvider<Insight>((ref) async {
   final logsAsync = ref.watch(recentLogsStreamProvider);

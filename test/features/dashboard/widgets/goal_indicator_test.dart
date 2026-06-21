@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:carbon_aware/features/dashboard/widgets/goal_indicator.dart';
+import 'package:carbon_aware/features/dashboard/presentation/widgets/goal_indicator.dart';
 import 'package:carbon_aware/core/constants/app_colors.dart';
 
 void main() {
