@@ -4,9 +4,32 @@ CarbonAware is a mobile-first web app that empowers individuals to track, unders
 
 ---
 
-## 🌍 Chosen Vertical & Challenge Focus
-* **Vertical**: Environmental Sustainability & Habit Building
-* **Core Objective**: To provide a simple, scientific, and low-friction interface for logging daily carbon-producing habits and displaying clear Weekly Charts, category-wise breakdowns, and real-time progress relative to personal carbon targets.
+## 🌍 Chosen Vertical
+**Environmental Sustainability & Habit Building**
+Our chosen vertical focuses on climate consciousness by providing individuals with a smart, frictionless daily logging tool to measure, track, and ultimately reduce their environmental impact.
+
+---
+
+## 🧠 Approach & Logic
+The logic of this solution is built around the "Core Loop" of habit formation: 
+1. **Awareness:** Users set a weekly baseline goal for $CO_2e$ reduction.
+2. **Action:** Frictionless daily inputs (Transport, Diet, Energy) are instantly converted into scientifically backed $CO_2$ emission metrics using EPA conversion factors.
+3. **Feedback:** A responsive dashboard visualizes progress against their weekly goals via charts, while an AI Insights Engine analyzes their specific historical logs to provide prioritized, contextual suggestions (e.g., if a user consistently drives a gas car, the engine suggests carpooling or public transit).
+
+---
+
+## ⚙️ How the Solution Works
+1. **Onboarding & Auth:** Users sign up using Firebase Authentication (Google Sign-In or Email/Password) to create an isolated profile.
+2. **Data Logging:** Users fill out a "Quick Log" containing sliders and dropdowns. This data is converted by the `CO2Calculator` and securely saved as a NoSQL document in Cloud Firestore.
+3. **State & UI:** A Flutter-based front-end uses Riverpod to stream the user's logs in real-time, instantly updating the Dashboard's `fl_chart` Weekly Bar Charts and Goal Indicators.
+4. **AI Generation:** The `InsightsEngine` aggregates recent logs and feeds them into the Gemini AI API (or falls back to deterministic rule-based algorithms) to deliver dynamic behavioral insights.
+
+---
+
+## 🤔 Assumptions Made
+* **Broad Categorization for Frictionless UX:** We assume that speed of logging is more critical than hyper-precise data for habit building. Therefore, we categorized "Diet" into 4 broad types (Meat Heavy, Average, Vegetarian, Vegan) rather than itemized meal inputs.
+* **Standardized US Averages:** We assume the user's baseline emissions roughly follow US Environmental Protection Agency (EPA) averages (e.g., `0.404 kg` $CO_2$ per passenger vehicle mile).
+* **Linear Daily Energy:** We assume home energy (kWh) can be reasonably estimated by the user daily or derived linearly from their monthly electric bill.
 
 ---
 
