@@ -7,18 +7,23 @@ import 'insights_engine.dart';
 
 class AiService {
   static Future<Insight> generateAiInsight(List<DailyLog> logs) async {
-    final apiKey = dotenv.env['GEMINI_API_KEY'];
-
-    // Fallback if API key is not configured or is a placeholder
-    if (apiKey == null || 
-        apiKey.isEmpty || 
-        apiKey == 'YOUR_GEMINI_API_KEY_HERE' || 
-        apiKey.startsWith('placeholder')) {
-      debugPrint("AiService: Gemini API key not configured or is placeholder. Using rule-based fallback.");
-      return _generateFallbackInsight(logs);
-    }
-
     try {
+      String? apiKey;
+      try {
+        apiKey = dotenv.env['GEMINI_API_KEY'];
+      } catch (e) {
+        debugPrint("AiService: dotenv not initialized or failed to load: $e");
+      }
+
+      // Fallback if API key is not configured or is a placeholder
+      if (apiKey == null || 
+          apiKey.isEmpty || 
+          apiKey == 'YOUR_GEMINI_API_KEY_HERE' || 
+          apiKey.startsWith('placeholder')) {
+        debugPrint("AiService: Gemini API key not configured or is placeholder. Using rule-based fallback.");
+        return _generateFallbackInsight(logs);
+      }
+
       final model = GenerativeModel(
         model: 'gemini-1.5-flash',
         apiKey: apiKey,
