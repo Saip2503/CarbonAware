@@ -39,10 +39,39 @@
   <title>CarbonAware — Track Your Carbon Footprint</title>
   <link rel="manifest" href="manifest.json">
 
+  <!-- Google Fonts Preloading for faster FCP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <!-- Google Sign-In: required for google_sign_in_web -->
   <meta name="google-signin-client_id" content="1017440772168-n7jrfuqm8impqgcrvkg0mh9tqgib6dv8.apps.googleusercontent.com">
+
+  <style>
+    /* CSS Splash Screen for immediate First Contentful Paint */
+    body {
+      background-color: #1B4332;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .loader {
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid #4CAF50;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
+  <div class="loader"></div>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
